@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Health Insights</title>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            background: #fffff8;
+            color: #111;
+            font-size: 17px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Navigation - Sticky */
+        nav {
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            background: #fffff8;
+            z-index: 1000;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        nav h2 {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-button {
+            background: transparent;
+            color: #111;
+            border: 1px solid #ccc;
+            padding: 8px 24px;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-button:hover {
+            border-color: #111;
+            background: #111;
+            color: #fffff8;
+        }
+
+        .nav-button.active {
+            background: #111;
+            color: #fffff8;
+            border-color: #111;
+        }
+
+        /* Protocol Section */
+        .protocol-section {
+            background: #f9f9f9;
+            padding: 30px;
+            margin-bottom: 50px;
+            border-left: 3px solid #111;
+        }
+
+        .protocol-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #111;
+            margin-bottom: 16px;
+        }
+
+        .protocol-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .protocol-text strong {
+            color: #111;
+            font-weight: 500;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 42px;
+            font-weight: 400;
+            color: #111;
+            margin-bottom: 40px;
+            letter-spacing: -0.5px;
+            text-align: center;
+        }
+
+        h2.section-header {
+            font-size: 28px;
+            font-weight: 400;
+            color: #111;
+            margin-top: 80px;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #111;
+            margin-top: 60px;
+            margin-bottom: 6px;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #888;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        /* Accordion */
+        .accordion-item {
+            margin-bottom: 2px;
+            border: 1px solid #e8e8e8;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: #ccc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .accordion-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            background: #fafafa;
+        }
+
+        .accordion-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gene-name {
+            font-weight: 500;
+            font-size: 16px;
+            color: #111;
+        }
+
+        .rsid {
+            font-size: 13px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+
+        .risk-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-baseline {
+            background: #28a745;
+        }
+
+        .dot-moderate {
+            background: #ffc107;
+        }
+
+        .dot-higher {
+            background: #dc3545;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 2000px;
+        }
+
+        .accordion-body {
+            padding: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .genotype-display {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .interpretation {
+            background: #f9f9f9;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 3px solid #111;
+            line-height: 1.7;
+        }
+
+        .interpretation-title {
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .summary-box {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 12px 0 24px 0;
+            border-left: 3px solid #ccc;
+            transition: all 0.2s ease;
+        }
+
+        .summary-box:hover {
+            border-left-color: #111;
+        }
+
+        .focus-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111;
+            margin-bottom: 12px;
+        }
+
+        .focus-areas {
+            list-style: none;
+            padding: 0;
+        }
+
+        .focus-areas li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .focus-areas li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #111;
+            font-weight: 500;
+        }
+
+        .person-section {
+            display: none;
+        }
+
+        .person-section.active {
+            display: block;
+        }
+
+        .footer {
+            margin-top: 100px;
+            padding-top: 30px;
+            border-top: 1px solid #e8e8e8;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <h2>Select Profile</h2>
+            <div class="nav-buttons">
+                <button class="nav-button active" onclick="showPerson('jess')">Jess</button>
+                <button class="nav-button" onclick="showPerson('cody')">Cody</button>
+            </div>
+        </nav>
+
+        <div class="content" id="main-content">
+
+            <div class="person-section active" id="jess-section">
+
+                <div class="protocol-section">
+                    <div class="protocol-title">Your Recommended 2026 Health Protocol</div>
+                    <p class="protocol-text">
+                        <strong>Nutrition:</strong> Regular movement is critical - both NEAT (walking, standing, daily activity) and planned exercise to offset genetic tendency toward higher body fat Include higher-intensity intervals in training to maximize fat oxidation despite genetic variants affecting beta-2 receptors Maintain consistent meal timing and avoid erratic eating patterns to support stable metabolic signaling<br><br><strong>Fitness:</strong> Build muscle through resistance training 2-3x/week - muscle tissue increases resting metabolic rate Prioritize aerobic exercise to build mitochondrial capacity - aim for 150+ min/week of zone 2 cardio Two KLOTHO variants (TT) - research suggests this may actually impair cognition rather than protect. Prioritize brain-healthy habits: aerobic exercise, sleep, cognitive stimulation<br><br><strong>Recovery & Lifestyle:</strong> Protect 7-9 hours sleep for leptin sensitivity and metabolic hormone regulation You're a Val/Val "warrior" - you handle acute stress well but may struggle with sustained focus. Use time-blocking and break complex tasks into shorter sprints Protect 7-9 hours sleep with consistent timing for memory consolidation and cognitive performance
+                    </p>
+                </div>
+
+                <h2 class="section-header">Energy & Metabolism</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate-higher genetic loading (2 higher, 3 moderate, 2 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Regular movement is critical - both NEAT (walking, standing, daily activity) and planned exercise to offset genetic tendency toward higher body fat</li>
+                        <li>Build muscle through resistance training 2-3x/week - muscle tissue increases resting metabolic rate</li>
+                        <li>Include higher-intensity intervals in training to maximize fat oxidation despite genetic variants affecting beta-2 receptors</li>
+                        <li>Maintain consistent meal timing and avoid erratic eating patterns to support stable metabolic signaling</li>
+                        <li>Prioritize aerobic exercise to build mitochondrial capacity - aim for 150+ min/week of zone 2 cardio</li>
+                        <li>Normal leptin sensitivity - maintain healthy body composition and avoid chronic calorie restriction</li>
+                        <li>Emphasize protein (30%+ of calories) and fiber (35g+ daily) for satiety given metabolic genetic pattern</li>
+                        <li>Protect 7-9 hours sleep for leptin sensitivity and metabolic hormone regulation</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">FTO</span>
+                            <span class="rsid">rs3751812</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Fat Mass and Obesity-Associated Gene</div>
+                            <p style="margin-bottom: 16px;">FTO is a gene that influences body mass regulation, appetite, and energy expenditure. It affects how the brain perceives hunger and satiety signals.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have two G alleles (GG) at rs3751812 - this significantly increases your genetic tendency toward higher body fat and increased appetite. Your brain may send stronger hunger signals and you may feel less satisfied after eating.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">AMPD1</span>
+                            <span class="rsid">rs17602729</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Adenosine Monophosphate Deaminase 1</div>
+                            <p style="margin-bottom: 16px;">AMPD1 is involved in energy recycling during high-intensity muscle contractions. The C34T variant affects how efficiently muscles regenerate ATP during intense exercise.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the GG genotype at rs17602729 - this is the baseline variant for exercise metabolism.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">ADRB2</span>
+                            <span class="rsid">rs1042713</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Beta-2 Adrenergic Receptor</div>
+                            <p style="margin-bottom: 16px;">ADRB2 encodes beta-2 adrenergic receptors that respond to adrenaline and trigger fat breakdown.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AG genotype at rs1042713 - this may moderately affect your fat oxidation during exercise.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">LEPR</span>
+                            <span class="rsid">rs1137101</span>
+                            <span class="genotype-display">AA</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Leptin Receptor</div>
+                            <p style="margin-bottom: 16px;">LEPR encodes the receptor for leptin, a hormone that signals fullness and regulates energy balance. Leptin resistance can lead to continued hunger despite adequate energy stores.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AA genotype at rs1137101 - this indicates normal leptin sensitivity. Maintain healthy body composition and avoid chronic calorie restriction to preserve this advantage.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">UCP2</span>
+                            <span class="rsid">rs659366</span>
+                            <span class="genotype-display">TC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Uncoupling Protein 2</div>
+                            <p style="margin-bottom: 16px;">UCP2 regulates mitochondrial efficiency and oxidative stress management.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the TC genotype at rs659366 - this affects your mitochondrial efficiency. Maintaining consistent meal timing and avoiding erratic eating patterns will support stable metabolic signaling.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">PPARGC1A</span>
+                            <span class="rsid">rs8192678</span>
+                            <span class="genotype-display">TC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">PPARG Coactivator 1-Alpha</div>
+                            <p style="margin-bottom: 16px;">PPARGC1A controls mitochondrial biogenesis and oxidative metabolism. It determines how well your cells produce energy, especially during exercise.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the TC genotype at rs8192678 - the Gly482Ser variant affects your mitochondrial efficiency. Prioritize aerobic exercise to build mitochondrial capacity - aim for 150+ minutes per week of zone 2 cardio.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">ADRB3</span>
+                            <span class="rsid">rs4994</span>
+                            <span class="genotype-display">AA</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Beta-3 Adrenergic Receptor</div>
+                            <p style="margin-bottom: 16px;">ADRB3 regulates lipolysis, thermogenesis, and energy expenditure in adipose tissue.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have two A alleles (AA) at rs4994 - the Trp64Arg variant. This is associated with reduced resting energy expenditure, lower thermogenesis, and increased obesity risk. Building muscle through resistance training becomes especially important for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Diet & Glycemic/Lipid</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate-higher genetic loading (1 higher, 0 moderate, 4 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>You have 2 protective GLP-1 receptor variants - leverage this by eating high-fiber, protein-rich meals that maximize natural GLP-1 response</li>
+                        <li>Baseline glucose regulation genetics - focus on carb quality over strict timing</li>
+                        <li>Saturated fat doesn't significantly affect your weight - still emphasize unsaturated fats (olive oil, nuts, fish) for cardiovascular health</li>
+                        <li>Mediterranean dietary pattern with emphasis on MUFA and omega-3 fats</li>
+                        <li>Structure eating within a 10-12 hour window (e.g., 8am-6pm)</li>
+                        <li>Take a 10-15 minute walk after lunch and dinner to blunt glucose spikes</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">GLP1R</span>
+                            <span class="rsid">rs6923761</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Glucagon-Like Peptide-1 Receptor</div>
+                            <p style="margin-bottom: 16px;">GLP-1R is the receptor for GLP-1, an incretin hormone that enhances insulin secretion, slows gastric emptying, and promotes satiety.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have protective GLP-1 receptor variants (GG at rs6923761) - leverage this advantage by eating high-fiber, protein-rich meals that maximize your natural GLP-1 response and enhance satiety.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">SLC2A2</span>
+                            <span class="rsid">rs5400</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Glucose Transporter 2 (GLUT2)</div>
+                            <p style="margin-bottom: 16px;">SLC2A2 encodes GLUT2, which transports glucose and is critical for glucose sensing.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the GG genotype at rs5400 - this is the baseline variant for glucose transport.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">TCF7L2</span>
+                            <span class="rsid">rs12255372</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Transcription Factor 7-Like 2</div>
+                            <p style="margin-bottom: 16px;">TCF7L2 is one of the strongest genetic risk factors for type 2 diabetes. It affects insulin secretion from pancreatic beta cells and glucose production in the liver.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the GG genotype at rs12255372 - baseline glucose regulation. Focus on carb quality over strict timing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">APOE</span>
+                            <span class="rsid">rs7412</span>
+                            <span class="genotype-display">CC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Apolipoprotein E</div>
+                            <p style="margin-bottom: 16px;">APOE determines cholesterol transport and clearance. The e2/e3/e4 variants have profound effects on cardiovascular and cognitive health.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the CC genotype at rs7412 - this affects your cholesterol metabolism. A Mediterranean dietary pattern with emphasis on MUFA and omega-3 fats is recommended.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">APOA2</span>
+                            <span class="rsid">rs5082</span>
+                            <span class="genotype-display">AA</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Apolipoprotein A-II</div>
+                            <p style="margin-bottom: 16px;">APOA2 is a component of HDL cholesterol that influences how your body responds to dietary saturated fat. Gene variants affect whether saturated fat intake correlates with weight gain.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AA genotype at rs5082 - saturated fat intake has minimal impact on your weight. Still emphasize unsaturated fats from olive oil, nuts, and fish for cardiovascular health.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Brain & Cognition</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate-higher genetic loading (1 higher, 0 moderate, 2 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Two KLOTHO variants (TT) - research suggests this may actually impair cognition rather than protect. Prioritize brain-healthy habits: aerobic exercise, sleep, cognitive stimulation</li>
+                        <li>You're a Val/Val "warrior" - you handle acute stress well but may struggle with sustained focus. Use time-blocking and break complex tasks into shorter sprints</li>
+                        <li>Aerobic exercise 150+ min/week in zone 2 to boost BDNF and support neuroplasticity</li>
+                        <li>Protect 7-9 hours sleep with consistent timing for memory consolidation and cognitive performance</li>
+                        <li>Engage in novel learning - new skills, languages, cognitive challenges - to maintain brain plasticity</li>
+                        <li>Manage stress through mindfulness, nature exposure, and social connection</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">KLOTHO</span>
+                            <span class="rsid">rs9536314</span>
+                            <span class="genotype-display">TT</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Alpha-Klotho</div>
+                            <p style="margin-bottom: 16px;">KLOTHO is a "longevity gene" that influences aging, cognition, and kidney function. The KL-VS variant affects cognitive performance.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have two KLOTHO variants (TT at rs9536314) - research suggests this may actually impair cognition rather than protect. Prioritize brain-healthy habits: aerobic exercise (150+ min/week), 7-9 hours sleep, and cognitive stimulation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">CSMD1</span>
+                            <span class="rsid">rs10503253</span>
+                            <span class="genotype-display">CC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">CSMD1</div>
+                            <p style="margin-bottom: 16px;"></p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the CC genotype at rs10503253 - this is the baseline variant for cognitive function.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">COMT</span>
+                            <span class="rsid">rs4680</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Catechol-O-Methyltransferase</div>
+                            <p style="margin-bottom: 16px;">COMT breaks down dopamine in the prefrontal cortex. The Val158Met polymorphism determines whether you clear dopamine quickly (warrior) or slowly (worrier).</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You're a Val/Val 'warrior' (GG at rs4680) - you handle acute stress well but may struggle with sustained focus. Use time-blocking and break complex tasks into shorter sprints.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Exercise & Performance</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Favorable genetic baseline (3 baseline, 2 moderate variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>RX genotype (TC) - balanced power and endurance profile. Train both strength and cardio without strong genetic bias</li>
+                        <li>Reduced opioid receptor function may limit "runner's high" - build exercise habits through competence (tracking progress), autonomy (choice), and social support</li>
+                        <li>Favorable training adaptation genetics - progressive overload with systematic increases in volume and intensity</li>
+                        <li>Follow 80/20 rule - 80% of cardio in easy zone 2, 20% high-intensity</li>
+                        <li>Strength train 2-3x/week focusing on compound movements</li>
+                        <li>Match training stress with adequate recovery - listen to your body and deload every 4-6 weeks</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">FTO</span>
+                            <span class="rsid">rs8044769</span>
+                            <span class="genotype-display">TT</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Fat Mass and Obesity-Associated Gene</div>
+                            <p style="margin-bottom: 16px;">FTO is a gene that influences body mass regulation, appetite, and energy expenditure. It affects how the brain perceives hunger and satiety signals.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the TT genotype at rs8044769 - this is the baseline variant for exercise affective response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">OPRM1</span>
+                            <span class="rsid">rs1799971</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Opioid Receptor Mu 1</div>
+                            <p style="margin-bottom: 16px;">OPRM1 encodes the mu-opioid receptor involved in pain perception and reward from exercise (runner's high).</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AG genotype at rs1799971 - reduced opioid receptor function may limit your 'runner's high'. Build exercise habits through competence (tracking progress), autonomy (choice in activities), and social support rather than relying on endorphin reward.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">ACTN3</span>
+                            <span class="rsid">rs1815739</span>
+                            <span class="genotype-display">TC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Alpha-Actinin-3</div>
+                            <p style="margin-bottom: 16px;">ACTN3 is a structural protein in fast-twitch muscle fibers. The R577X polymorphism determines whether you produce this protein.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the RX genotype (TC at rs1815739) - balanced power and endurance profile. Train both strength and cardio without strong genetic bias either way.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">CREB1</span>
+                            <span class="rsid">rs2253206</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">cAMP Response Element-Binding Protein 1</div>
+                            <p style="margin-bottom: 16px;">CREB1 is a transcription factor that responds to exercise and regulates training adaptations.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have favorable training adaptation genetics (AG at rs2253206) - progressive overload with systematic increases in volume and intensity should work well for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">CREB1</span>
+                            <span class="rsid">rs2360969</span>
+                            <span class="genotype-display">TC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">cAMP Response Element-Binding Protein 1</div>
+                            <p style="margin-bottom: 16px;">CREB1 is a transcription factor that responds to exercise and regulates training adaptations.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have favorable training adaptation genetics (TC at rs2360969) - progressive overload with systematic increases in volume and intensity should work well for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Mobility & Injury</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate genetic influence (1 moderate, 0 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Elevated inflammatory genetics (TNF) - emphasize anti-inflammatory whole foods (fatty fish, leafy greens, berries, turmeric)</li>
+                        <li>Dynamic warm-up 10-15 minutes before training - never train cold</li>
+                        <li>Progress training volume by no more than 10% per week - connective tissue adapts slower than muscle</li>
+                        <li>Protein intake 1.6-2.2g/kg bodyweight daily to support tissue repair</li>
+                        <li>Prioritize 7-9 hours sleep - growth hormone and tissue repair peak during deep sleep</li>
+                        <li>Include mobility work and soft tissue care (foam rolling, stretching) 3-4x/week</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">TNF</span>
+                            <span class="rsid">rs1800629</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Tumor Necrosis Factor Alpha</div>
+                            <p style="margin-bottom: 16px;">TNF-alpha is a pro-inflammatory cytokine. Gene variants affect systemic inflammation levels.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have elevated inflammatory genetics (AG at rs1800629) - emphasize anti-inflammatory whole foods like fatty fish, leafy greens, berries, and turmeric. Recovery and sleep become especially important.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="person-section" id="cody-section">
+
+                <div class="protocol-section">
+                    <div class="protocol-title">Your Recommended 2026 Health Protocol</div>
+                    <p class="protocol-text">
+                        <strong>Nutrition:</strong> Regular movement is critical - both NEAT (walking, standing, daily activity) and planned exercise to offset genetic tendency toward higher body fat Include higher-intensity intervals in training to maximize fat oxidation despite genetic variants affecting beta-2 receptors Maintain consistent meal timing and avoid erratic eating patterns to support stable metabolic signaling<br><br><strong>Fitness:</strong> Build muscle through resistance training 2-3x/week - muscle tissue increases resting metabolic rate Two KLOTHO variants (TT) - research suggests this may actually impair cognition rather than protect. Prioritize brain-healthy habits: aerobic exercise, sleep, cognitive stimulation Aerobic exercise 150+ min/week in zone 2 to boost BDNF and support neuroplasticity<br><br><strong>Recovery & Lifestyle:</strong> Protect 7-9 hours sleep for leptin sensitivity and metabolic hormone regulation Met carriers (worrier type) excel at routine work but struggle under acute stress. Build structured routines and use stress management techniques Protect 7-9 hours sleep with consistent timing for memory consolidation and cognitive performance
+                    </p>
+                </div>
+
+                <h2 class="section-header">Energy & Metabolism</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate-higher genetic loading (2 higher, 2 moderate, 3 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Regular movement is critical - both NEAT (walking, standing, daily activity) and planned exercise to offset genetic tendency toward higher body fat</li>
+                        <li>Build muscle through resistance training 2-3x/week - muscle tissue increases resting metabolic rate</li>
+                        <li>Include higher-intensity intervals in training to maximize fat oxidation despite genetic variants affecting beta-2 receptors</li>
+                        <li>Maintain consistent meal timing and avoid erratic eating patterns to support stable metabolic signaling</li>
+                        <li>Normal leptin sensitivity - maintain healthy body composition and avoid chronic calorie restriction</li>
+                        <li>Emphasize protein (30%+ of calories) and fiber (35g+ daily) for satiety given metabolic genetic pattern</li>
+                        <li>Protect 7-9 hours sleep for leptin sensitivity and metabolic hormone regulation</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">FTO</span>
+                            <span class="rsid">rs3751812</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Fat Mass and Obesity-Associated Gene</div>
+                            <p style="margin-bottom: 16px;">FTO is a gene that influences body mass regulation, appetite, and energy expenditure. It affects how the brain perceives hunger and satiety signals.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have two G alleles (GG) at rs3751812 - this significantly increases your genetic tendency toward higher body fat and increased appetite. Your brain may send stronger hunger signals and you may feel less satisfied after eating.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">AMPD1</span>
+                            <span class="rsid">rs17602729</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Adenosine Monophosphate Deaminase 1</div>
+                            <p style="margin-bottom: 16px;">AMPD1 is involved in energy recycling during high-intensity muscle contractions. The C34T variant affects how efficiently muscles regenerate ATP during intense exercise.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the GG genotype at rs17602729 - this is the baseline variant for exercise metabolism.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">ADRB2</span>
+                            <span class="rsid">rs1042713</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Beta-2 Adrenergic Receptor</div>
+                            <p style="margin-bottom: 16px;">ADRB2 encodes beta-2 adrenergic receptors that respond to adrenaline and trigger fat breakdown.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the GG genotype at rs1042713 - this variant can reduce fat breakdown efficiency during exercise. You may benefit from higher-intensity intervals to maximize fat oxidation despite this genetic pattern.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">LEPR</span>
+                            <span class="rsid">rs1137101</span>
+                            <span class="genotype-display">AA</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Leptin Receptor</div>
+                            <p style="margin-bottom: 16px;">LEPR encodes the receptor for leptin, a hormone that signals fullness and regulates energy balance. Leptin resistance can lead to continued hunger despite adequate energy stores.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AA genotype at rs1137101 - this indicates normal leptin sensitivity. Maintain healthy body composition and avoid chronic calorie restriction to preserve this advantage.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">UCP2</span>
+                            <span class="rsid">rs659366</span>
+                            <span class="genotype-display">TC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Uncoupling Protein 2</div>
+                            <p style="margin-bottom: 16px;">UCP2 regulates mitochondrial efficiency and oxidative stress management.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the TC genotype at rs659366 - this affects your mitochondrial efficiency. Maintaining consistent meal timing and avoiding erratic eating patterns will support stable metabolic signaling.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">PPARGC1A</span>
+                            <span class="rsid">rs8192678</span>
+                            <span class="genotype-display">CC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">PPARG Coactivator 1-Alpha</div>
+                            <p style="margin-bottom: 16px;">PPARGC1A controls mitochondrial biogenesis and oxidative metabolism. It determines how well your cells produce energy, especially during exercise.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the CC genotype at rs8192678 - standard mitochondrial function and exercise adaptation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">ADRB3</span>
+                            <span class="rsid">rs4994</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Beta-3 Adrenergic Receptor</div>
+                            <p style="margin-bottom: 16px;">ADRB3 regulates lipolysis, thermogenesis, and energy expenditure in adipose tissue.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have one A allele at rs4994 - this may slightly reduce your metabolic rate and thermogenic capacity.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Diet & Glycemic/Lipid</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Favorable genetic baseline (4 baseline, 1 moderate variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Baseline glucose regulation genetics - focus on carb quality over strict timing</li>
+                        <li>Saturated fat doesn't significantly affect your weight - still emphasize unsaturated fats (olive oil, nuts, fish) for cardiovascular health</li>
+                        <li>Mediterranean dietary pattern with emphasis on MUFA and omega-3 fats</li>
+                        <li>Structure eating within a 10-12 hour window (e.g., 8am-6pm)</li>
+                        <li>Take a 10-15 minute walk after lunch and dinner to blunt glucose spikes</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">GLP1R</span>
+                            <span class="rsid">rs6923761</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Glucagon-Like Peptide-1 Receptor</div>
+                            <p style="margin-bottom: 16px;">GLP-1R is the receptor for GLP-1, an incretin hormone that enhances insulin secretion, slows gastric emptying, and promotes satiety.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AG genotype at rs6923761 - baseline GLP-1 receptor function.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">SLC2A2</span>
+                            <span class="rsid">rs5400</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Glucose Transporter 2 (GLUT2)</div>
+                            <p style="margin-bottom: 16px;">SLC2A2 encodes GLUT2, which transports glucose and is critical for glucose sensing.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AG genotype at rs5400 - this is the baseline variant for glucose transport.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">TCF7L2</span>
+                            <span class="rsid">rs12255372</span>
+                            <span class="genotype-display">GG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Transcription Factor 7-Like 2</div>
+                            <p style="margin-bottom: 16px;">TCF7L2 is one of the strongest genetic risk factors for type 2 diabetes. It affects insulin secretion from pancreatic beta cells and glucose production in the liver.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the GG genotype at rs12255372 - baseline glucose regulation. Focus on carb quality over strict timing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">APOE</span>
+                            <span class="rsid">rs7412</span>
+                            <span class="genotype-display">CC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Apolipoprotein E</div>
+                            <p style="margin-bottom: 16px;">APOE determines cholesterol transport and clearance. The e2/e3/e4 variants have profound effects on cardiovascular and cognitive health.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the CC genotype at rs7412 - this affects your cholesterol metabolism. A Mediterranean dietary pattern with emphasis on MUFA and omega-3 fats is recommended.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">APOA2</span>
+                            <span class="rsid">rs5082</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Apolipoprotein A-II</div>
+                            <p style="margin-bottom: 16px;">APOA2 is a component of HDL cholesterol that influences how your body responds to dietary saturated fat. Gene variants affect whether saturated fat intake correlates with weight gain.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AG genotype at rs5082 - saturated fat intake has minimal impact on your weight. Still emphasize unsaturated fats from olive oil, nuts, and fish for cardiovascular health.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Brain & Cognition</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate-higher genetic loading (1 higher, 1 moderate, 1 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Two KLOTHO variants (TT) - research suggests this may actually impair cognition rather than protect. Prioritize brain-healthy habits: aerobic exercise, sleep, cognitive stimulation</li>
+                        <li>Met carriers (worrier type) excel at routine work but struggle under acute stress. Build structured routines and use stress management techniques</li>
+                        <li>Aerobic exercise 150+ min/week in zone 2 to boost BDNF and support neuroplasticity</li>
+                        <li>Protect 7-9 hours sleep with consistent timing for memory consolidation and cognitive performance</li>
+                        <li>Engage in novel learning - new skills, languages, cognitive challenges - to maintain brain plasticity</li>
+                        <li>Manage stress through mindfulness, nature exposure, and social connection</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">KLOTHO</span>
+                            <span class="rsid">rs9536314</span>
+                            <span class="genotype-display">TT</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Alpha-Klotho</div>
+                            <p style="margin-bottom: 16px;">KLOTHO is a "longevity gene" that influences aging, cognition, and kidney function. The KL-VS variant affects cognitive performance.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have two KLOTHO variants (TT at rs9536314) - research suggests this may actually impair cognition rather than protect. Prioritize brain-healthy habits: aerobic exercise (150+ min/week), 7-9 hours sleep, and cognitive stimulation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">CSMD1</span>
+                            <span class="rsid">rs10503253</span>
+                            <span class="genotype-display">CC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">CSMD1</div>
+                            <p style="margin-bottom: 16px;"></p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the CC genotype at rs10503253 - this is the baseline variant for cognitive function.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-moderate"></div>
+                            <span class="gene-name">COMT</span>
+                            <span class="rsid">rs4680</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Catechol-O-Methyltransferase</div>
+                            <p style="margin-bottom: 16px;">COMT breaks down dopamine in the prefrontal cortex. The Val158Met polymorphism determines whether you clear dopamine quickly (warrior) or slowly (worrier).</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You're a Val/Met heterozygote (AG at rs4680) - intermediate dopamine levels and balanced stress response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Exercise & Performance</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Favorable genetic baseline (5 baseline, 0 moderate variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Favorable training adaptation genetics - progressive overload with systematic increases in volume and intensity</li>
+                        <li>Follow 80/20 rule - 80% of cardio in easy zone 2, 20% high-intensity</li>
+                        <li>Strength train 2-3x/week focusing on compound movements</li>
+                        <li>Match training stress with adequate recovery - listen to your body and deload every 4-6 weeks</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">FTO</span>
+                            <span class="rsid">rs8044769</span>
+                            <span class="genotype-display">TT</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Fat Mass and Obesity-Associated Gene</div>
+                            <p style="margin-bottom: 16px;">FTO is a gene that influences body mass regulation, appetite, and energy expenditure. It affects how the brain perceives hunger and satiety signals.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the TT genotype at rs8044769 - this is the baseline variant for exercise affective response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">OPRM1</span>
+                            <span class="rsid">rs1799971</span>
+                            <span class="genotype-display">AA</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Opioid Receptor Mu 1</div>
+                            <p style="margin-bottom: 16px;">OPRM1 encodes the mu-opioid receptor involved in pain perception and reward from exercise (runner's high).</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the AA genotype at rs1799971 - normal exercise-induced endorphin response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">ACTN3</span>
+                            <span class="rsid">rs1815739</span>
+                            <span class="genotype-display">CC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Alpha-Actinin-3</div>
+                            <p style="margin-bottom: 16px;">ACTN3 is a structural protein in fast-twitch muscle fibers. The R577X polymorphism determines whether you produce this protein.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have the RR genotype (CC at rs1815739) - produces ACTN3 protein, favorable for power and sprint performance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">CREB1</span>
+                            <span class="rsid">rs2253206</span>
+                            <span class="genotype-display">AG</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">cAMP Response Element-Binding Protein 1</div>
+                            <p style="margin-bottom: 16px;">CREB1 is a transcription factor that responds to exercise and regulates training adaptations.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have favorable training adaptation genetics (AG at rs2253206) - progressive overload with systematic increases in volume and intensity should work well for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-baseline"></div>
+                            <span class="gene-name">CREB1</span>
+                            <span class="rsid">rs2360969</span>
+                            <span class="genotype-display">TC</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">cAMP Response Element-Binding Protein 1</div>
+                            <p style="margin-bottom: 16px;">CREB1 is a transcription factor that responds to exercise and regulates training adaptations.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have favorable training adaptation genetics (TC at rs2360969) - progressive overload with systematic increases in volume and intensity should work well for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-header">Mobility & Injury</h2>
+                <div class="label">Risk Assessment</div>
+                <p>Moderate-higher genetic loading (1 higher, 0 moderate, 0 baseline variants)</p>
+
+                <div class="summary-box">
+                    <div class="focus-title">What to Focus On in 2026</div>
+                    <ul class="focus-areas">
+                        <li>Elevated inflammatory genetics (TNF) - emphasize anti-inflammatory whole foods (fatty fish, leafy greens, berries, turmeric)</li>
+                        <li>Dynamic warm-up 10-15 minutes before training - never train cold</li>
+                        <li>Progress training volume by no more than 10% per week - connective tissue adapts slower than muscle</li>
+                        <li>Protein intake 1.6-2.2g/kg bodyweight daily to support tissue repair</li>
+                        <li>Prioritize 7-9 hours sleep - growth hormone and tissue repair peak during deep sleep</li>
+                        <li>Include mobility work and soft tissue care (foam rolling, stretching) 3-4x/week</li>
+                    </ul>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">
+                            <div class="risk-dot dot-higher"></div>
+                            <span class="gene-name">TNF</span>
+                            <span class="rsid">rs1800629</span>
+                            <span class="genotype-display">AA</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="label">Tumor Necrosis Factor Alpha</div>
+                            <p style="margin-bottom: 16px;">TNF-alpha is a pro-inflammatory cytokine. Gene variants affect systemic inflammation levels.</p>
+
+                            <div class="interpretation">
+                                <div class="interpretation-title">What This Means For You</div>
+                                <p>You have elevated inflammatory genetics (AA at rs1800629) - emphasize anti-inflammatory whole foods like fatty fish, leafy greens, berries, and turmeric. Recovery and sleep become especially important.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>This report is for educational and informational purposes only. It is not medical advice.</p>
+                <p>Consult with qualified healthcare providers before making health decisions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isActive = content.classList.contains('active');
+
+            // Close all accordions in the current person section
+            const currentSection = header.closest('.person-section');
+            currentSection.querySelectorAll('.accordion-content').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Open clicked accordion if it wasn't active
+            if (!isActive) {
+                content.classList.add('active');
+            }
+        }
+
+        function showPerson(person) {
+            // Save scroll position
+            const scrollPos = window.scrollY;
+
+            // Hide all sections
+            document.querySelectorAll('.person-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(person + '-section').classList.add('active');
+
+            // Update nav buttons
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Restore scroll position
+            window.scrollTo(0, scrollPos);
+        }
+    </script>
+</body>
+</html>
